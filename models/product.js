@@ -53,7 +53,7 @@ const productSchema = new mongoose.Schema(
     subcategories: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'SubCategory',
+        ref: 'Subcategory',
       },
     ],
     brand: {
@@ -62,8 +62,8 @@ const productSchema = new mongoose.Schema(
     },
     ratingsAverage: {
       type: Number,
-      min: [1, 'Rating must be at least 1.0'], // Minimum rating value
-      max: [5, 'Rating must be at most 5.0'], // Maximum rating value
+      min: [1, 'Rating must be at least 1'], // Minimum rating value
+      max: [5, 'Rating must be at most 5'], // Maximum rating value
     },
     ratingsQuantity: {
       type: Number,

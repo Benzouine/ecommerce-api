@@ -1,5 +1,5 @@
 // @desc   Throw ApiError instances to signal predictable errors within API operations.
-// Defining a custom error class by extending the built-in Error class
+
 
 class ApiError extends Error {
   // Constructor for the ApiError class
