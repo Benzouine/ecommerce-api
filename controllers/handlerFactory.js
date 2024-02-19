@@ -1,6 +1,6 @@
-const slugify = require("slugify");
-const ApiError = require("../utils/ApiError");
 const asyncHandler = require("express-async-handler");
+
+const ApiError = require("../utils/ApiError");
 const FeaturesApi = require("../utils/FeaturesApi");
 
 exports.getDocuments = (Model) =>
@@ -26,10 +26,7 @@ exports.createDocument = (Model) =>
   asyncHandler(async (req, res) => {
     const { name } = req.body;
 
-    const document = await Model.create({
-      ...req.body,
-      slug: slugify(name),
-    });
+    const document = await Model.create(req.body);
 
     res.status(201).json({ status: "success", data: document });
   });
@@ -49,11 +46,9 @@ exports.updateDocument = (Model) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
-    const document = await Model.findOneAndUpdate(
-      { _id: id },
-      { ...req.body, slug: slugify(req.body.name) },
-      { new: true }
-    );
+    const document = await Model.findOneAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
 
     if (!document) {
       return next(new ApiError(`No document for this id ${id}`, 404));

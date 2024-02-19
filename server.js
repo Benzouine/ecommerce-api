@@ -2,6 +2,7 @@
 const express = require('express'); // Express framework for building web applications
 const dotenv = require('dotenv'); // Dotenv for loading environment variables from a .env file
 const morgan = require('morgan'); // Morgan for logging request details
+const path = require('path')
 
 // Configure dotenv to read environment variables from the .env file
 dotenv.config({ path: '.env' });
@@ -16,6 +17,7 @@ const categoryRoute = require('./routes/categoryRoute'); // Route for category-r
 const subcategoryRoute = require('./routes/subcategoryRoute'); // Route for subcategory-related operations
 const brandRoute = require('./routes/brandRoute'); // Route for brand-related operations
 const productRoute = require('./routes/productRoute');
+const userRoute = require("./routes/userRoute")
 
 // Establish database connection
 dbConnection();
@@ -25,7 +27,7 @@ const app = express();
 
 // Middleware to parse JSON bodies in requests
 app.use(express.json());
-
+app.use(express.static(path.join(__dirname, 'uploads')))
 // Conditionally use morgan logging in development environment
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // Logging format for development
@@ -37,6 +39,8 @@ app.use('/api/v1/categories', categoryRoute); // Categories route
 app.use('/api/v1/subcategories', subcategoryRoute); // Subcategories route
 app.use('/api/v1/brands', brandRoute); // Brands route
 app.use('/api/v1/products',productRoute)
+app.use('/api/v1/users',userRoute)
+
 
 // Handler for all other routes not defined (404 error)
 app.all('*', (req, res, next) => {

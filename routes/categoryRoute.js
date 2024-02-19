@@ -14,7 +14,6 @@ const {
   deleteCategoryValidator,
 } = require("../utils/validators/categoryValidator");
 
-
 // Creating a new router instance
 const router = express.Router();
 
@@ -26,8 +25,10 @@ router
   .route("/")
   .get(categoryController.getCategories) // GET request to get all categories
   .post(
-    createCategoryValidator, // Middleware to validate the category creation request
-    categoryController.createCategory // Controller function to create a category
+    categoryController.uploadCategoryImage,
+    categoryController.resizeImage,
+    createCategoryValidator,
+    categoryController.createCategory
   );
 
 // Route definitions for specific category by ID ("/:id")
@@ -38,6 +39,8 @@ router
     categoryController.getCategory // Controller function to get a specific category
   )
   .patch(
+    categoryController.uploadCategoryImage,
+    categoryController.resizeImage,
     updateCategoryValidator, // Middleware to validate the update category request
     categoryController.updateCategory // Controller function to update a specific category
   )
