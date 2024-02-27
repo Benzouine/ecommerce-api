@@ -12,6 +12,7 @@ exports.getProductValidator = [
 ];
 
 exports.createProductValidator = [
+  
   check("name")
     .notEmpty()
     .withMessage("Product name is required.")
@@ -68,20 +69,33 @@ exports.createProductValidator = [
     .optional()
     .isArray()
     .withMessage("Product images should be provided as an array of strings."),
+
+    check("category")
+    .notEmpty()
+    .isMongoId()
+    .withMessage("Category ID must be a valid MongoDB ObjectId.")
+    .custom(async (categoryId) => {
+      const exists = await Category.exists({ _id: categoryId });
+      if (!exists) {
+        throw new Error("No category found with the provided ID.");
+      }
+    }),
   check("category")
     .notEmpty()
     .isMongoId()
-    .custom((categoryId) => {
-      return Category.findById(categoryId).then((category) => {
+    .custom(async (categoryId) => {
+      const category = await Category.findById(categoryId)
+     
         if (!category) {
-          return Promise.reject("No category found with the provided ID.");
+          throw new Error("No category found with the provided ID.");
         }
-      });
+     
     }),
   check("subcategories")
     .optional()
     .isMongoId()
     .withMessage("Subcategory ID must be a valid MongoDB ObjectId.")
+    .bail()
     // .custom() is likely a method of a validation library (like express-validator).
     // It takes a function that performs custom validation. The function receives 'subcategoryIds' as an argument.
     .custom((subcategoryIds) =>

@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
-
-
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
-   name:{
-    type:String,
-    trim:true,
-    required:[true,"Name required"]
-   },
+    name: {
+      type: String,
+      trim: true,
+      required: [true, "Name required"],
+    },
     slug: {
       type: String,
       lowercase: true,
@@ -26,6 +25,13 @@ const userSchema = new mongoose.Schema(
       required: [true, "password required"],
       minlength: [6, "Too short password"],
     },
+    passwordChangedAt: Date,
+
+    role: {
+      type: String,
+      enum: ["user", "manager", "admin"],
+      default: "user",
+    },
     role: {
       type: String,
       enum: ["user", "manager", "admin"],
@@ -39,6 +45,11 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+
 module.exports = mongoose.model("User", userSchema);
-
-

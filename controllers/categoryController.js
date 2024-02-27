@@ -14,9 +14,8 @@ exports.uploadCategoryImage = uploadSingleImage('image');
 
 // Image processing
 exports.resizeImage = asyncHandler(async (req, res, next) => {
-  if (!req.file) {
-    return next(new ApiError("No image uploaded",400));
-  }
+
+  if (req.file) {
   const filename = `category-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
@@ -27,7 +26,7 @@ exports.resizeImage = asyncHandler(async (req, res, next) => {
 
   // Save image into our db
   req.body.image = filename;
-
+  }
   next();
 });
 

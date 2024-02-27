@@ -6,6 +6,7 @@ const {
   getUserValidator,
   updateUserValidator,
   deleteUserValidator,
+  changeUserPasswordValidator
 } = require("../utils/validators/userValidator");
 
 const router = express.Router();
@@ -29,5 +30,10 @@ router
     userController.updateUser
   )
   .delete(deleteUserValidator, userController.deleteUser);
+
+router.patch("/:id/active",userController.isUserActive);
+
+router.patch("/:id/change-password",changeUserPasswordValidator,userController.changeUserPassword);
+
 
 module.exports = router;
