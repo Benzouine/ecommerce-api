@@ -32,11 +32,6 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "manager", "admin"],
       default: "user",
     },
-    role: {
-      type: String,
-      enum: ["user", "manager", "admin"],
-      default: "user",
-    },
     active: {
       type: Boolean,
       default: true,
@@ -50,6 +45,5 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
-
 
 module.exports = mongoose.model("User", userSchema);

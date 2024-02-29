@@ -17,7 +17,8 @@ const categoryRoute = require('./routes/categoryRoute'); // Route for category-r
 const subcategoryRoute = require('./routes/subcategoryRoute'); // Route for subcategory-related operations
 const brandRoute = require('./routes/brandRoute'); // Route for brand-related operations
 const productRoute = require('./routes/productRoute');
-const userRoute = require("./routes/userRoute")
+const userRoute = require("./routes/userRoute");
+const authRoute = require("./routes/authRoute");
 
 // Establish database connection
 dbConnection();
@@ -40,6 +41,8 @@ app.use('/api/v1/subcategories', subcategoryRoute); // Subcategories route
 app.use('/api/v1/brands', brandRoute); // Brands route
 app.use('/api/v1/products',productRoute)
 app.use('/api/v1/users',userRoute)
+app.use('/api/v1/auth',authRoute)
+
 
 
 // Handler for all other routes not defined (404 error)
