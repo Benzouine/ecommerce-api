@@ -1,12 +1,13 @@
 const express = require("express");
 
 const userController = require("../controllers/userController");
+const authController = require("../controllers/authController");
 const {
   createUserValidator,
   getUserValidator,
   updateUserValidator,
   deleteUserValidator,
-  changeUserPasswordValidator
+  changeUserPasswordValidator,
 } = require("../utils/validators/userValidator");
 
 const router = express.Router();
@@ -15,6 +16,8 @@ router
   .route("/")
   .get(userController.getUsers)
   .post(
+    authController.protect,
+    authController.checkRoles("admin", "manager"),
     userController.uploadUserImage,
     userController.resizeImage,
     createUserValidator,
@@ -24,16 +27,33 @@ router
   .route("/:id")
   .get(getUserValidator, userController.getUser)
   .patch(
+    authController.protect,
+    authController.checkRoles("admin", "manager"),
     userController.uploadUserImage,
     userController.resizeImage,
     updateUserValidator,
     userController.updateUser
   )
-  .delete(deleteUserValidator, userController.deleteUser);
+  .delete(
+    authController.protect,
+    authController.checkRoles("admin"),
+    deleteUserValidator,
+    userController.deleteUser
+  );
 
-router.patch("/:id/active",userController.isUserActive);
+router.patch(
+  "/:id/active",
+  authController.protect,
+  authController.checkRoles("admin", "manager"),
+  userController.isUserActive
+);
 
-router.patch("/:id/change-password",changeUserPasswordValidator,userController.changeUserPassword);
-
+router.patch(
+   
+  "/:id/change-password",
+  authController.protect,
+  changeUserPasswordValidator,
+  userController.changeUserPassword
+);
 
 module.exports = router;

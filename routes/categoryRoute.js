@@ -13,7 +13,7 @@ const {
   updateCategoryValidator,
   deleteCategoryValidator,
 } = require("../utils/validators/categoryValidator");
-
+const authController = require("../controllers/authController");
 // Creating a new router instance
 const router = express.Router();
 
@@ -25,6 +25,8 @@ router
   .route("/")
   .get(categoryController.getCategories) // GET request to get all categories
   .post(
+    authController.protect,
+    authController.checkRoles("admin","manager"),
     categoryController.uploadCategoryImage,
     categoryController.resizeImage,
     createCategoryValidator,
@@ -39,12 +41,16 @@ router
     categoryController.getCategory // Controller function to get a specific category
   )
   .patch(
+    authController.protect,
+    authController.checkRoles("admin","manager"),
     categoryController.uploadCategoryImage,
     categoryController.resizeImage,
     updateCategoryValidator, // Middleware to validate the update category request
     categoryController.updateCategory // Controller function to update a specific category
   )
   .delete(
+    authController.protect,
+    authController.checkRoles("admin"),
     deleteCategoryValidator, // Middleware to validate the delete category request
     categoryController.deleteCategory // Controller function to delete a specific category
   );
